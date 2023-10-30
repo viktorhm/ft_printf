@@ -10,39 +10,41 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdarg.h>
+#include"printf.h"
 
-int ft_print(char *str)
+static void ft_word(char *src)
 {
-
-
+	int i = 0 ;
+	while(src[i] != '\0')
+	{
+		write(1,&src[i],1);
+	}
 }
-/*
+
 int ft_printf(const char *str, ...)
 {
-va_list args;
-va_start(args, str);
-int i = 0;
+	int i; int  j ;
+	i  = 0; j = 0;
+	va_list args;
+	va_start(args , str );
 
-while( str[i] != '\0')
-	{
-	if(str[i]== '%')
-		if(str[i+1]=='d')
-			itoa(args())
+	while(str[i] != '\0')
+		{
+		if(str[i]== '%' && str[i+1]=='d' || str[i+1]=='i')
+			ft_putnbr_fd((va_arg(args , int)));
+		write(1, &str[i] ,1);
+			i++;
+		}
 
-		i++;
-	}
 
-
-va_end(args);
-
+	va_end(args);
+return 0 ;
 }
 
-*/
-//testing prinft
 int main (void)
 {
-//ft_printf("test");
-printf("test	\n 	%#o	 e");
+ft_printf("test %d  test %i ",6 , 10);
+
+return 0 ;
+
 }
