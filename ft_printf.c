@@ -3,36 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vharatyk <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: viktor <viktor@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/28 08:36:20 by vharatyk          #+#    #+#             */
-/*   Updated: 2023/10/28 08:36:23 by vharatyk         ###   ########.fr       */
+/*   Updated: 2023/10/30 18:43:52 by viktor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"printf.h"
 
-static void ft_word(char *src)
+static int f_int (int nb , int *i)
 {
-	int i = 0 ;
-	while(src[i] != '\0')
-	{
-		write(1,&src[i],1);
-	}
+if (nb >= 2147483648 || nb >= -2147483647)
+	return(1);
+	ft_putnbr_fd (nb);
+			*i = *i+2;
 }
+
+
 
 int ft_printf(const char *str, ...)
 {
-	int i; int  j ;
-	i  = 0; j = 0;
+	int j;
+	int *i;
+	j = 0;
+	*i = &j;
 	va_list args;
 	va_start(args , str );
 
-	while(str[i] != '\0')
+	while(str[*i] != '\0')
 		{
-		if(str[i]== '%' && str[i+1]=='d' || str[i+1]=='i')
-			ft_putnbr_fd((va_arg(args , int)));
-		write(1, &str[i] ,1);
+		if(str[*i]== '%' && str[*i+1]=='d' || str[*i+1]=='i')
+			f_int(va_arg(args , int) , i );
+
+
+		write(1, &str[*i] ,1);
 			i++;
 		}
 
@@ -41,9 +46,11 @@ int ft_printf(const char *str, ...)
 return 0 ;
 }
 
+
 int main (void)
 {
-ft_printf("test %d  test %i ",6 , 10);
+ft_printf("testtert-%d --test %i ",2147483648, 10);
+printf("testtert-%d --test %i ",-2147483647, 10);
 
 return 0 ;
 
