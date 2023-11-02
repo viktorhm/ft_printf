@@ -18,6 +18,41 @@
 
 // }
 
+// int f_adress( char src , int i)
+// {
+// char test = &src ;
+// printf("%d",test);
+// return(i)
+
+// }
+int f_int_unsigned(unsigned nb , int i)
+{
+{
+	char result = 0 ;
+
+
+
+		if (nb >= 10)
+		{
+			f_int_unsigned(nb / 10 , i++);
+			result = nb % 10 +'0';
+			write(1, &result,1);
+
+			result = 0 ;
+		}
+		else
+			result = nb % 10 +'0';
+			write(1, &result,1);
+		result = 0 ;
+
+		return(i);
+
+}
+
+return 0 ;
+
+}
+
 static int f_int (int nb , int i)
 {
 // if (nb >= 2147483648 || nb <= -2147483648)
@@ -63,19 +98,23 @@ static int f_string(char *c , int i)
 
 int what_is_write(va_list args ,int  i  ,char str )
 {
-				if(str == 'i')
-					i = f_int(va_arg(args , int) , i);
-				if(str == 'd')
-					i = f_dec(va_arg(args , int) , i);
-				if(str == 'c')
-					i = f_char(va_arg(args , int) , i);
-				if(str == 's')
-					i = f_string(va_arg(args ,char *), i);
-				if(str == '%')
-					i++;
-				else
-					i++;
-		return(i);
+	if(str == 'i')
+		i = f_int(va_arg(args , int) , i);
+	if(str == 'd')
+		i = f_int(va_arg(args , int) , i);
+	if(str == 'u')
+		i = f_int_unsigned(va_arg(args , int) , i);
+	if(str == 'c')
+		i = f_char(va_arg(args , int) , i);
+	if(str == 's')
+		i = f_string(va_arg(args ,char *), i);
+	if(str == '%')
+		i++;
+	// if(str == 'p')
+	// 	i = f_adress(va_arg(args ,char *), i);
+	else
+	i++;
+	return(i);
 }
 
 
@@ -100,14 +139,25 @@ int ft_printf(const char *str, ...)
 			i++;
 		}
 	va_end(args);
-return 0 ;
+return (i) ;
 }
 
 
 int main (void)
 {
-ft_printf("testtert-%d --test %i  , %c , %s, %%  \n",2, 10 ,'f' , "test?" );
-   printf("testtert-%d --test %i  , %c , %s, %%  \n",2, 10 ,'f' , "test?" );
+
+	int a = 10;
+	int *b = &a;
+
+	unsigned int i = 4294967295 ;
+
+
+printf("---------%ls----------", b[2]);
+
+
+ft_printf("d -> %d -- i-> %i -- u-> %u -- c-> %c -- s-> %s -- w-> %% -- p->  /END \n",200, 1000 , i  ,'f' , "test?");
+
+   printf("d -> %d -- i-> %i -- u-> %u -- c-> %c -- s-> %s -- w-> %% -- p-> %p/END \n",200, 1000 , i  ,'f' , "test?" , b );
 
 return 0 ;
 
