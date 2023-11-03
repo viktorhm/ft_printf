@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 int 	ft_printf(const char *str, ...);
-void	ft_putnbr_fd(int c);
+void	ft_putnbr(int c);
+int 	f_char(char c);
 
 #endif

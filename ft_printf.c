@@ -12,108 +12,159 @@
 
 #include"ft_printf.h"
 
-// static void f_erreur (void)
-// {
-// write(1,"erreur",6);
 
-// }
-
-// int f_adress( char src , int i)
-// {
-// char test = &src ;
-// printf("%d",test);
-// return(i)
-
-// }
-int f_int_unsigned(unsigned nb , int i)
+int f_int_unsigned(unsigned int nb)
 {
-{
-	char result = 0 ;
-
-
-
-		if (nb >= 10)
-		{
-			f_int_unsigned(nb / 10 , i++);
-			result = nb % 10 +'0';
-			write(1, &result,1);
-
-			result = 0 ;
-		}
-		else
-			result = nb % 10 +'0';
-			write(1, &result,1);
-		result = 0 ;
-
-		return(i);
+int i = 0;
+	i = ft_unsigned_putnbr(nb);
+	return(i);
 
 }
 
-return 0 ;
-
-}
-
-static int f_int (int nb , int i)
+static int f_int (int nb)
 {
-// if (nb >= 2147483648 || nb <= -2147483648)
-// 	f_erreur();
-
-	ft_putnbr_fd (nb);
-	i ++;
+	int i = 0;
+	i = ft_putnbr_fd(nb);
 	return(i);
 }
 
-static int f_char(char c , int i)
+
+ int ft_char(char c)
 {
 	write(1,&c,1);
-	i ++;
-	return(i);
+	return(1);
 }
 
-static int f_dec(int c , int i)
-{
-	char chiffre;
-	chiffre  =  c + '0';
-	write(1, &chiffre ,1);
-	i ++;
-	return(i);
 
-}
-
-static int f_string(char *c , int i)
+static int f_string(char *c)
 {
+	int i = 0;
 	int j = 0;
 
 	while(c[j] !='\0')
 	{
 	write(1,&c[j],1);
 	j++;
-	}
 	i++;
+	}
+
 	return(i);
 
 }
 
-
-
-int what_is_write(va_list args ,int  i  ,char str )
+static int f_pourcent()
 {
-	if(str == 'i')
-		i = f_int(va_arg(args , int) , i);
-	if(str == 'd')
-		i = f_int(va_arg(args , int) , i);
-	if(str == 'u')
-		i = f_int_unsigned(va_arg(args , int) , i);
-	if(str == 'c')
-		i = f_char(va_arg(args , int) , i);
-	if(str == 's')
-		i = f_string(va_arg(args ,char *), i);
-	if(str == '%')
-		i++;
-	// if(str == 'p')
-	// 	i = f_adress(va_arg(args ,char *), i);
+ft_char('%');
+return(1);
+}
+
+int 	f_hex(unsigned int num)
+{
+	int i = 0;
+	if (num >= 16)
+	{
+		i += f_hex(num / 16);
+		i += f_hex(num % 16);
+	}
 	else
-	i++;
+	{
+		if (num <= 9)
+			i += ft_char((num + '0'));
+		else
+		{
+
+			i += ft_char((num - 10 + 'a'));
+
+		}
+
+	}
+	return(i);
+}
+
+int 	f_heX(unsigned int num)
+{
+	int i = 0;
+	if (num >= 16)
+	{
+		i += f_heX(num / 16);
+		i += f_heX(num % 16);
+	}
+	else
+	{
+		if (num <= 9)
+			i += ft_char((num + '0'));
+		else
+		{
+
+			i += ft_char((num - 10 + 'A'));
+
+		}
+
+	}
+	return(i);
+}
+
+
+int 	f_hex_void(unsigned long long int num , *s)
+{
+	int i = 0;
+	if (num >= 16)
+	{
+		i += f_hex(num / 16);
+		i += f_hex(num % 16);
+	}
+	else
+	{
+
+
+	}
+	return(i);
+}
+int w0x ()
+{
+write(1 ,"0x" ,2);
+return(2);
+}
+
+int  f_Pvoid(unsigned long long  num)
+{
+	int	i;
+
+	i = 0;
+	i += w0x();
+	if (num == 0)
+	{
+		i += write(1, "(nil)", 5);
+		return (5);
+	}
+	else
+		i += f_hex_void(num);
+	return(i);
+}
+
+
+int what_is_write(va_list args  ,char str )
+{
+	int i = 0 ;
+	if(str == 'i')
+		i += f_int(va_arg(args , int));
+	else if(str == 'd')
+		i += f_int(va_arg(args , int));
+	else if(str == 'u')
+		i += f_int_unsigned(va_arg(args , int));
+	else if(str == 'c')
+		i += ft_char(va_arg(args , int));
+	else if(str == 's')
+		i += f_string(va_arg(args ,char *));
+	else if(str == '%')
+		i += f_pourcent();
+	else if(str == 'x')
+		i += f_hex(va_arg(args , int ));
+	else if(str == 'X')
+		i += f_heX(va_arg(args , int ));
+	else if(str == 'p')
+		i += f_Pvoid(va_arg(args , int ));
+
 	return(i);
 }
 
@@ -123,42 +174,39 @@ int ft_printf(const char *str, ...)
 {
 
 	int i;
-	i = 0;
 
-	va_list args;
-	va_start(args , str );
-
-	while(str[i] != '\0')
+	while(str[i])
 		{
 			if(str[i] == '%')
 			{
-				 i = what_is_write( args , i  , str[i+1]);
+				 taille += what_is_write( args , str[i+1]);
+				 i++;
 			}
-
-		write(1, &str[i] ,1);
+			else
+			{
+			write(1, &str[i] ,1);
+			taille++;
+			}
 			i++;
 		}
 	va_end(args);
-return (i) ;
+
+return (taille) ;
 }
 
 
-int main (void)
-{
+// int main (void)
+// {
 
-	int a = 10;
-	int *b = &a;
+//  	int a = 10;
+//  	int *b = &a;
 
-	unsigned int i = 4294967295 ;
-
-
-printf("---------%ls----------", b[2]);
+//  	unsigned int i = 4294967295 ;
 
 
-ft_printf("d -> %d -- i-> %i -- u-> %u -- c-> %c -- s-> %s -- w-> %% -- p->  /END \n",200, 1000 , i  ,'f' , "test?");
+// 	printf("%d\n", ft_printf("%p \n", b ));
+// 	printf("%d",   printf("%p \n", b  ));
 
-   printf("d -> %d -- i-> %i -- u-> %u -- c-> %c -- s-> %s -- w-> %% -- p-> %p/END \n",200, 1000 , i  ,'f' , "test?" , b );
+//  return 0 ;
 
-return 0 ;
-
-}
+// }
