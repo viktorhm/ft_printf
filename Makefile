@@ -1,43 +1,51 @@
-NAME			=	libftprintf.a
+DIRSRC		= ./srcs/
 
-CC				=	cc
-CFLAGS			=	-Wall -Wextra -Werror
-AR				=	ar
-ARFLAGS 		=	rcs
-RM				=	rm -rf
+DIRINC		= ./includes/
 
-SRC				=	ft_printf putnbr
-SRCS 			=	$(addsuffix .c, $(SRC))
+DIROBJ		= ./objs/
 
-OBJ_DIR			=	obj
-OBJS			=	$(SRCS:%.c=$(OBJ_DIR)/%.o)
+DIRLIB		= ./libft/
 
-LIBFT_PATH		=	./libft
-LIBFT			=	$(LIBFT_PATH)/libft.a
+SRC			= ft_printf idu_file p_file s_file x_file
 
-$(OBJ_DIR)/%.o:		%.c
-					$(CC) $(CFLAGS) -c $< -o $@
+SRCS		= $(addprefix ${DIRSRC}, $(addsuffix .c, ${SRC}))
 
-all:				$(NAME)
+HEAD		= ./includes/
 
-bonus:				all
+OBJS		= ${SRCS:.c=.o}
 
-$(NAME):			$(LIBFT) $(OBJ_DIR) $(OBJS)
-				cp	$(LIBFT) $(NAME)
-					$(AR) $(ARFLAGS) $(NAME) $(OBJS)
+NAME		= libftprintf.a
 
-$(LIBFT):
-					make -C $(LIBFT_PATH) all
+NAMELFT		= libft.a
 
-$(OBJ_DIR):
-					mkdir -p $(OBJ_DIR)
+CC			= gcc
+RM			= rm -f
+AR			= ar rc
+RN			= ranlib
+
+CFLAGS		= -Wall -Wextra -Werror
+
+.c.o:
+			${CC} ${CFLAGS} -c -I${DIRINC} -I${DIRLIB} $< -o ${<:.c=.o}
+
+$(NAME):	${OBJS}
+			cd ${DIRLIB} && ${MAKE} && cp -v ${NAMELFT} ../${NAME}
+			${AR} ${NAME} ${OBJS}
+			${RN} ${NAME}
+
+main:		$(NAME)
+			${CC} -I ${DIRINC} -I ${DIRLIB} ${NAME} main.c
+
+all:		$(NAME)
 
 clean:
-					make -C $(LIBFT_PATH) clean
-					$(RM) $(OBJ_DIR)
+			${RM} ${OBJS}
+			cd ${DIRLIB} && ${MAKE} clean
 
-fclean:				clean
-					make -C $(LIBFT_PATH) fclean
-					$(RM) $(NAME)
+fclean:		clean
+			${RM} $(NAME)
+			cd ${DIRLIB} && ${MAKE} fclean
 
-re:					fclean all
+re:			fclean all
+
+.PHONY:		all clean fclean re
